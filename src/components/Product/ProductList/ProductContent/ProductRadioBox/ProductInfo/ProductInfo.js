@@ -10,9 +10,10 @@ const ProductInfo = ({
   handleInfoMouseLeave,
 }) => {
   const { item_alt, name, keyword, price } = spotdata;
+
   return (
     <Link
-      to="http://"
+      to={`/detail/${spotdata.id}`}
       alt={item_alt}
       className={`container${isRadioActive ? ' active' : ''}`}
       onMouseOver={handleInfoMouseEnter}
@@ -26,7 +27,9 @@ const ProductInfo = ({
         </div>
         <MdArrowForwardIos className="rigthArrow" />
       </div>
-      <span className="price">{price}</span>
+      <span className="price">
+        {Number(price?.split('.')[0]).toLocaleString()}원
+      </span>
     </Link>
   );
 };

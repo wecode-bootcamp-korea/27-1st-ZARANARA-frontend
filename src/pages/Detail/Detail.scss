@@ -3,6 +3,7 @@
 
 .detail {
   display: flex;
+  margin-top: 100px;
 
   .dimmer {
     position: fixed;
@@ -15,7 +16,6 @@
 
   .leftContainer {
     width: 55%;
-    height: 1000px;
 
     img {
       display: block;
@@ -23,7 +23,8 @@
   }
 
   .rightContainer {
-    position: fixed;
+    position: sticky;
+    top: 0;
     right: 0;
     width: 45%;
     height: 1000px;
@@ -72,72 +73,6 @@
           cursor: pointer;
         }
       }
-    }
-
-    .slideWrapper {
-      display: flex;
-      overflow: hidden;
-
-      .slideConWrap {
-        display: flex;
-        .slideContainer {
-          width: 220px;
-
-          height: 260px;
-          margin-right: 20px;
-          overflow: hidden;
-
-          .productRelatedImg {
-            position: relative;
-
-            .productRelatedInsideArrow {
-              display: flex;
-              justify-content: space-between;
-              position: absolute;
-              top: 110px;
-              width: 220px;
-
-              padding: 0 16px;
-              z-index: 20;
-
-              button {
-                font-size: 30px;
-                color: #fff;
-              }
-            }
-          }
-
-          .slideWrapperTest {
-            display: flex;
-
-            .productRelatedSlideWrap {
-              display: flex;
-              position: relative;
-
-              .productRelatedSlider {
-                width: 220px;
-                height: 260px;
-              }
-
-              .productRelatedImg {
-                position: absolute;
-                top: 90px;
-                left: 0;
-                width: 220px;
-                margin-right: 10px;
-                background: blue;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .relatedProducts {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
   }
 }

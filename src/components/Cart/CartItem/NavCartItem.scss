@@ -9,12 +9,18 @@
 
   .photoWrapper {
     position: relative;
-    width: 120px;
     margin-bottom: 8px;
     margin-right: 12px;
     overflow: hidden;
 
-    .photo {
+    .photoLink {
+      .photo {
+        display: inline-block;
+        width: 120px;
+        height: 160px;
+        background-position: center;
+        background-size: cover;
+      }
     }
   }
 

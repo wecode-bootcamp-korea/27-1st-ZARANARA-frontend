@@ -1,6 +1,7 @@
 import React from 'react';
 import CartItem from '../CartItem/CartItem';
 import { API } from '../../../config';
+
 import './CartItems.scss';
 
 const CartItems = ({
@@ -14,14 +15,15 @@ const CartItems = ({
     fetch(`${API.USER}/cart`, {
       method: 'DELETE',
       headers: {
-        Authorization:
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.yl6fSLkA5B_Kni5GMCwe_Y5zgTo2Knf8x8ObpniI-KI',
+        Authorization: localStorage.getItem('token'),
       },
     })
       .then(res => res.json())
       .then(result => {
-        if (result.MESSAGE === 'ALL_DELETED') onResetItem();
-        else if (result.MESSAGE === 'DOES_NOT_EXIST')
+        if (result.MESSAGE === 'ALL_DELETED') {
+          onResetItem();
+          window.location.reload();
+        } else if (result.MESSAGE === 'DOES_NOT_EXIST')
           alert('장바구니가 비었습니다.');
       })
       .catch(error => alert(error));

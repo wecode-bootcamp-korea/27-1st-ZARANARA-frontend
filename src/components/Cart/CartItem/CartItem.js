@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { API } from '../../../config';
+
 import { GoPlusSmall } from 'react-icons/go';
 import { BiMinus } from 'react-icons/bi';
 import { IoCloseSharp } from 'react-icons/io5';
-import { API } from '../../../config';
+
 import './CartItem.scss';
 
 const CartItem = ({
@@ -13,17 +15,17 @@ const CartItem = ({
   onDecreaseCartItem,
 }) => {
   const handleDeleteItem = itemInfo => {
-    fetch(`${API.USER}/cart\?cartId\=${itemInfo.cart_id}`, {
+    fetch(`${API.USER}/cart?cartId=${itemInfo.cart_id}`, {
       method: 'DELETE',
       headers: {
-        Authorization:
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.yl6fSLkA5B_Kni5GMCwe_Y5zgTo2Knf8x8ObpniI-KI',
+        Authorization: localStorage.getItem('token'),
       },
     })
       .then(res => res.json())
-      .then(
-        result => result.MESSAGE === 'ITEM_DELETED' && onDeleteItem(itemInfo)
-      )
+      .then(result => {
+        result.MESSAGE === 'ITEM_DELETED' && onDeleteItem(itemInfo);
+        window.location.reload();
+      })
       .catch(error => alert(error));
   };
 
@@ -31,8 +33,7 @@ const CartItem = ({
     fetch(`${API.USER}/cart`, {
       method: 'PATCH',
       headers: {
-        Authorization:
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.yl6fSLkA5B_Kni5GMCwe_Y5zgTo2Knf8x8ObpniI-KI',
+        Authorization: localStorage.getItem('token'),
       },
       body: JSON.stringify({
         cart_id: itemInfo.cart_id,
@@ -50,8 +51,7 @@ const CartItem = ({
     fetch(`${API.USER}/cart`, {
       method: 'PATCH',
       headers: {
-        Authorization:
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.yl6fSLkA5B_Kni5GMCwe_Y5zgTo2Knf8x8ObpniI-KI',
+        Authorization: localStorage.getItem('token'),
       },
       body: JSON.stringify({
         cart_id: itemInfo.cart_id,
@@ -68,8 +68,13 @@ const CartItem = ({
   return (
     <li className="cartItem">
       <div className="photoWrapper">
-        <Link to="/item/" className="photo">
-          <img alt={itemInfo.name} src={itemInfo.image} />
+        <Link to={`/detail/${itemInfo.product_id}`} className="imgBox">
+          <div
+            className="img"
+            alt={itemInfo.name}
+            src={itemInfo.image}
+            style={{ backgroundImage: `url(${itemInfo.image})` }}
+          />
         </Link>
         <div className="itemAction">
           <span className="actionText">나중에 쇼핑하기</span>

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Spot from './Spot/Spot';
 import ProductInfo from './ProductInfo/ProductInfo';
+
 import './ProductRadioBox.scss';
 
 const ProductRadioBox = ({ spotdata }) => {

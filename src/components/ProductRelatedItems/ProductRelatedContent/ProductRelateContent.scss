@@ -1,0 +1,60 @@
+@import '../../../styles/variables.scss';
+
+.slideContainer {
+  width: 220px;
+  height: 300px;
+  flex-shrink: 0;
+  margin-right: 20px;
+  overflow: hidden;
+
+  .productRelatedImg {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    width: 220px;
+    margin-right: 10px;
+
+    .productRelatedInsideArrow {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      top: 20px;
+      width: 220px;
+
+      padding: 0 16px;
+      z-index: 20;
+
+      button {
+        font-size: 30px;
+        color: $color-white;
+      }
+    }
+  }
+
+  .slideWrapperTest {
+    display: flex;
+
+    .productRelatedSlideWrap {
+      display: flex;
+      position: relative;
+
+      .productRelatedSlideConWrap {
+        font-size: $font-regular;
+
+        .title {
+          margin: 10px 0;
+        }
+
+        .productRelatedSliderWrapper {
+          display: flex;
+          width: 100%;
+          height: 240px;
+          overflow: hidden;
+
+          .productRelatedSlider {
+          }
+        }
+      }
+    }
+  }
+}

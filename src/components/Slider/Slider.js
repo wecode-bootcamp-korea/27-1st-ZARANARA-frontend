@@ -1,28 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import Arrows from './Arrows/Arrows';
 import Dots from './Dots/Dots';
 import SliderContent from './SliderContent/SliderContent';
-import './Slider.scss';
 import { API } from '../../config';
+
+import './Slider.scss';
 
 const Slider = () => {
   const [sliderImagesData, setSliderImagesData] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const sliderRef = useRef();
 
-  // 백엔드 데이터용
   useEffect(() => {
-    fetch(`${API.PRODUCT}\?offset\=0\&limit\=6`)
+    fetch(`${API.PRODUCT}?offset=0&limit=6&themeId=3`)
       .then(res => res.json())
       .then(data => setSliderImagesData(data.results));
   }, []);
-
-  // mock 데이터용
-  // useEffect(() => {
-  //   fetch('/data/sliderMockData.json')
-  //     .then(res => res.json())
-  //     .then(data => setSliderImagesData(data));
-  // }, []);
 
   const INDEX_LENGTH = sliderImagesData.length - 1;
 

@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { FiHeart } from 'react-icons/fi';
 import { HiMinus, HiPlus } from 'react-icons/hi';
+
 import './ProductInfoValue.scss';
 
 const ProductInfoValue = ({
@@ -11,9 +13,9 @@ const ProductInfoValue = ({
 }) => {
   return (
     <li className="productInfoValueLi">
-      {productOptions?.map((el, index) => (
+      {productOptions?.[0].size.split(',').map((el, index) => (
         <span key={index} className="productInfoValue">
-          {el.size}
+          {el}
         </span>
       ))}
       <span className="productInfoLikes">

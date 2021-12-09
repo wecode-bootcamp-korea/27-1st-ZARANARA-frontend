@@ -10,6 +10,14 @@
     margin-bottom: 8px;
     overflow: hidden;
 
+    .imgBox {
+      .img {
+        width: 100%;
+        height: 420px;
+        background-size: cover;
+        background-position: center;
+      }
+    }
     .itemAction {
       @include flexSpaceBetweenCenter;
       position: absolute;
@@ -78,6 +86,7 @@
 
         .countButton:disabled {
           cursor: default;
+          color: $color-gray;
         }
 
         .countInput {

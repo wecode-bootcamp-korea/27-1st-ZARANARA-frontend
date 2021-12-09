@@ -1,10 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
 import DetailModal from '../../components/DetailModal/DetailModal';
 import ProductInfoTable from '../../components/ProductInfoTable/ProductInfoTable';
 import ProductRelatedItmes from '../../components/ProductRelatedItems/ProductRelatedItems';
 import Button from '../../components/Button/Button';
 import DetailContent from './DetailContent';
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { API } from '../../config';
+
 import './Detail.scss';
 
 const Detail = () => {
@@ -12,43 +16,42 @@ const Detail = () => {
   const [productAmount, setProductAmount] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSlideWrap, setCurrentSlideWrap] = useState(0);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [likes, setLikes] = useState();
   const dimmerRef = useRef();
-  const slideRef = useRef();
   const slideWrapRef = useRef();
+
   const params = useParams();
 
-  const TOTAL_SLIDES = 1;
-  const TOTAL_SLIDES_WRAP = 2;
-  const PRODUCT_INFO_TABLE = detailContents.product_options;
-  const PRODUCT_RELATED_IMG = detailContents.related_products;
-  const PRODUCT_MATERIAL_CAUTION = detailContents.material_cautions;
-  const PRODUCT_MATERIAL_NAME = detailContents.material_names;
+  const TOTAL_SLIDES_WRAP = detailContents.related_products?.length;
 
-  const clickOrder = () => {
-    // fetch('/data/mock.json')
-    //   .then(response => response.json())
-    //   .then(result => setDetailContents(result.result[0]));
-
-    fetch('http://10.58.4.145:8000/users/cart', {
+  const handleAddItemToCart = () => {
+    fetch(`${API.USER}/cart`, {
       method: 'POST',
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
       body: JSON.stringify({
-        // price: detailContents.price?.split('.')[0],
-        id: detailContents.id,
+        product_id: detailContents.id,
         quantity: productAmount,
-        //producTid, price, 갯수, 사이즈, 컬러
       }),
     })
       .then(response => response.json())
-      .then(result => console.log('결과: ', result));
+      .then(result => {
+        if (result.MESSAGE === 'SUCCESS') {
+          alert('장바구니에 담겼습니다.');
+          window.location.reload();
+        } else if (result.MESSAGE === 'ITEM_ALREADY_EXIST')
+          alert('이미 장바구니에 있는 상품입니다.');
+        else if (result.ERROR === 'INVALID_TOKEN')
+          alert('로그인 후 장바구니에 담아주세요.');
+      });
   };
 
   useEffect(() => {
-    fetch('/data/mockDataDetail.json')
+    const productId = params.id;
+    fetch(`${API.PRODUCT}/detail/${productId}`)
       .then(response => response.json())
-      .then(result => setDetailContents(result.result));
-  }, []);
+      .then(data => setDetailContents(data.result));
+  }, [params]);
 
   const increaseAmount = () => {
     setProductAmount(productAmount => productAmount + 1);
@@ -59,22 +62,6 @@ const Detail = () => {
     setProductAmount(productAmount => productAmount - 1);
   };
 
-  const handlePrevSlide = () => {
-    if (currentSlide === 0) {
-      setCurrentSlide(TOTAL_SLIDES);
-    } else {
-      setCurrentSlide(currentSlide - 1);
-    }
-  };
-
-  const handleNextSlide = () => {
-    if (currentSlide >= TOTAL_SLIDES) {
-      setCurrentSlide(0);
-    } else {
-      setCurrentSlide(currentSlide + 1);
-    }
-  };
-
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -83,7 +70,7 @@ const Detail = () => {
     if (isModalOpen === true) return setIsModalOpen(false);
   };
 
-  const prevSlideWrap = () => {
+  const handlePrevSlideWrap = () => {
     if (currentSlideWrap === 0) {
       setCurrentSlideWrap(TOTAL_SLIDES_WRAP);
     } else {
@@ -99,11 +86,16 @@ const Detail = () => {
     }
   };
 
+  useEffect(() => {
+    slideWrapRef.current.style.transition = 'all 0.5s ease-in-out';
+    slideWrapRef.current.style.transform = `translateX(-${
+      currentSlideWrap * 2
+    }00px)`;
+  }, [currentSlideWrap]);
+
   const {
     images,
     information,
-    is_liked,
-    keyword,
     material_cautions,
     material_names,
     name,
@@ -111,18 +103,6 @@ const Detail = () => {
     product_options,
     related_products,
   } = detailContents;
-
-  useEffect(() => {
-    slideRef.current.style.transition = 'all 0.5s ease-in-out';
-    slideRef.current.style.transform = `translateX(-${currentSlide * 2}00px)`;
-  }, [currentSlide]);
-
-  useEffect(() => {
-    slideWrapRef.current.style.transition = 'all 0.5s ease-in-out';
-    slideWrapRef.current.style.transform = `translateX(-${
-      currentSlideWrap * 2
-    }00px)`;
-  }, [currentSlideWrap]);
 
   return (
     <div className="detail" onClick={closeModal}>
@@ -140,7 +120,6 @@ const Detail = () => {
             increaseAmount={increaseAmount}
             decreaseAmount={decreaseAmount}
             productAmount={productAmount}
-            // likesClick={likesClick}
           />
           {isModalOpen && (
             <DetailModal
@@ -151,11 +130,8 @@ const Detail = () => {
             />
           )}
           <div className="productDetailInfo">
-            {/* <div className="productDetailContents" onClick={openModal}>
-              배송 및 반품
-            </div> */}
             <Button
-              // handleClick={clickOrder}
+              handleClick={handleAddItemToCart}
               format="bigger"
               type="button"
               title={`장바구니에 담기 (${Number(
@@ -167,15 +143,24 @@ const Detail = () => {
               제품 상세정보
             </div>
           </div>
-          <ProductRelatedItmes
-            relatedProducts={related_products}
-            slideWrapRef={slideWrapRef}
-            handleNextSlide={handleNextSlide}
-            slideRef={slideRef}
-            prevSlideWrap={prevSlideWrap}
-            handleNextSlide={handleNextSlide}
-            handleNextSlideWrap={handleNextSlideWrap}
-          />
+          <div className="productRelatedItems">
+            <div className="productRelatedHeader">
+              <div className="productRelatedTxt">룩 완성하기</div>
+              <div className="productRelatedArrow">
+                <button onClick={handlePrevSlideWrap}>
+                  <BsChevronLeft />
+                </button>
+                <button onClick={handleNextSlideWrap}>
+                  <BsChevronRight />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="slideWrapper">
+            <div className="slideConWrap" ref={slideWrapRef}>
+              <ProductRelatedItmes relatedProducts={related_products} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

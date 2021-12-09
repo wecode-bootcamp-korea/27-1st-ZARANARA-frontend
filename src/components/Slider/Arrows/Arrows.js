@@ -1,7 +1,8 @@
 import React from 'react';
-import './Arrows.scss';
+
 import { MdArrowBackIos } from 'react-icons/md';
 import { MdArrowForwardIos } from 'react-icons/md';
+import './Arrows.scss';
 
 const Arrows = ({ handlePrevSlide, handleNextSlide }) => {
   return (

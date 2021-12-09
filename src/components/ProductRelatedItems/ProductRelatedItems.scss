@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .productRelatedItems {
   width: 100%;
   margin: 0 auto;
@@ -8,7 +10,7 @@
     align-items: baseline;
 
     .productRelatedTxt {
-      font-weight: 500;
+      font-weight: $weight-regular;
       font-size: 16px;
       margin-bottom: 20px;
     }
@@ -19,22 +21,17 @@
         height: 24px;
         margin-left: 5px;
         background: #1e1e1e;
-        color: #fff;
+        color: $color-white;
       }
     }
   }
+}
 
-  .productRelatedSlideWrap {
+.slideWrapper {
+  overflow: hidden;
+  width: 100%;
+
+  .slideConWrap {
     display: flex;
-    margin: 0 auto;
-    width: 220px;
-    // position: relative;
-
-    // .productRelatedSlider {
-    //   // position: absolute;
-    //   width: 220px;
-    //   height: 220px;
-    //   background: skyblue;
-    // }
   }
 }

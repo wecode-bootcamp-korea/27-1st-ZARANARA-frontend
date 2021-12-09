@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useScroll from '../hooks/useScroll';
 
 import LoginModal from '../../pages/LoginModal/LoginModal';
 import JoinModal from '../../pages/JoinModal/JoinModal';
 import { NAV_DATA } from './NavData';
+import NavCartItem from '../Cart/CartItem/NavCartItem';
 
-import useScroll from './useScroll';
 import { API } from '../../config';
 
 import { IoIosMenu } from 'react-icons/io';
@@ -14,39 +15,32 @@ import { BsCart3 } from 'react-icons/bs';
 import { ReactComponent as Logo } from '../../assets/logo-white.svg';
 
 import './Nav.scss';
-import NavCartItem from '../Cart/CartItem/NavCartItem';
-
-const MOCK_API = '/data/cartMockData.json';
 
 const Nav = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
-  const [isUserLogin, setIsUserLogin] = useState(false);
+  const [isUserLogin, setIsUserLogin] = useState(
+    !!localStorage.getItem('token')
+  );
   const [cartItems, setCartItems] = useState([]);
   const { pathname } = useLocation();
+
   const scrollY = useScroll();
+
+  const navigate = useNavigate();
 
   const navClassName = `nav ${pathname === '/' ? 'white' : ''}`;
 
-  // 백엔드용
-  // useEffect(() => {
-  //   fetch(`${API.USER}/cart`, {
-  //     method: 'GET',
-  //     headers: {
-  //       Authorization:
-  //         'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.yl6fSLkA5B_Kni5GMCwe_Y5zgTo2Knf8x8ObpniI-KI',
-  //     },
-  //   })
-  //     .then(res => res.json())
-  //     .then(result => setCartItems(result));
-  // }, []);
-
-  // // mockdata 용
   useEffect(() => {
-    fetch(MOCK_API)
+    fetch(`${API.USER}/cart`, {
+      method: 'GET',
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    })
       .then(res => res.json())
-      .then(result => setCartItems(result));
-  }, []);
+      .then(data => setCartItems(data.result));
+  }, [pathname]);
 
   const handleLoginModal = () => {
     setIsLogin(!isLogin);
@@ -57,6 +51,10 @@ const Nav = () => {
     setIsLogin(false);
   };
 
+  const handleCloseJoin = () => {
+    setIsSignup(false);
+  };
+
   const handleJoinClick = () => {
     setIsSignup(false);
   };
@@ -64,6 +62,10 @@ const Nav = () => {
   const handleLogoutClick = () => {
     setIsUserLogin(false);
     localStorage.clear();
+  };
+
+  const goToCategoryList = id => {
+    navigate(`category/${id}`);
   };
 
   return (
@@ -79,8 +81,12 @@ const Nav = () => {
             </div>
             <ul className="gnbMenuBar">
               {NAV_DATA.map(el => (
-                <li key={el.id} className="gnbMenuLi">
-                  <Link to="">{el.title}</Link>
+                <li
+                  key={el.id}
+                  className="gnbMenuLi"
+                  onClick={() => goToCategoryList(el.id)}
+                >
+                  {el.title}
                 </li>
               ))}
             </ul>
@@ -111,16 +117,17 @@ const Nav = () => {
             </div>
             <div className="cartLink">
               <BsCart3 className="cartIcon" alt="cart" />
-              <div className="carTxt">{cartItems.length}</div>
+              <div className="carTxt">{cartItems?.length}</div>
               <aside className="cartPreView">
                 <div className="content">
                   <span className="productCountText">
-                    {cartItems.length} 제품
+                    {cartItems?.length} 제품
                   </span>
                   <ul className="cartItems">
-                    {cartItems.map(item => (
-                      <NavCartItem key={item.cart_id} itemInfo={item} />
-                    ))}
+                    {cartItems?.length > 0 &&
+                      cartItems.map(item => (
+                        <NavCartItem key={item.cart_id} itemInfo={item} />
+                      ))}
                   </ul>
                 </div>
                 <div className="buttonWrapper">
@@ -143,6 +150,7 @@ const Nav = () => {
       {isSignup && (
         <JoinModal
           handleJoinClick={handleJoinClick}
+          handleCloseJoin={handleCloseJoin}
           setIsSignup={setIsSignup}
         />
       )}

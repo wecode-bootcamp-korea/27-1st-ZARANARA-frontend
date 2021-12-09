@@ -1,5 +1,6 @@
 import React from 'react';
 import ProductInfoValue from './ProductInfoValue/ProductInfoValue';
+
 import './ProductInfoTable.scss';
 
 const ProductInfoTable = ({
@@ -7,23 +8,24 @@ const ProductInfoTable = ({
   decreaseAmount,
   productAmount,
   productOptions,
-}) => (
-  <div className="productInfoTable">
-    <div className="productInfoHeader">
-      <span className="productValue">가로</span>
-      <span className="productValue">세로</span>
-      <span className="productValue">높이</span>
-      <span className="productValue">무게</span>
+}) => {
+  return (
+    <div className="productInfoTable">
+      <div className="productInfoHeader">
+        {productOptions?.[0].size_information.split(',').map(item => (
+          <span className="productValue">{item}</span>
+        ))}
+      </div>
+      <ul className="productInfoCons">
+        <ProductInfoValue
+          productOptions={productOptions}
+          increaseAmount={increaseAmount}
+          decreaseAmount={decreaseAmount}
+          productAmount={productAmount}
+        />
+      </ul>
     </div>
-    <ul className="productInfoCons">
-      <ProductInfoValue
-        productOptions={productOptions}
-        increaseAmount={increaseAmount}
-        decreaseAmount={decreaseAmount}
-        productAmount={productAmount}
-      />
-    </ul>
-  </div>
-);
+  );
+};
 
 export default ProductInfoTable;

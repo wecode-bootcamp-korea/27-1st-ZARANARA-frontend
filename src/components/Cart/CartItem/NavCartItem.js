@@ -6,12 +6,16 @@ const NavCartItem = ({ itemInfo }) => {
   return (
     <li className="navCartItem">
       <div className="photoWrapper">
-        <Link to="/item/" className="photo">
-          <img alt={itemInfo.name} src={itemInfo.image} />
+        <Link to={`/detail/${itemInfo.product_id}`} className="photoLink">
+          <div
+            className="photo"
+            style={{ backgroundImage: `url(${itemInfo.image})` }}
+            alt={itemInfo.name}
+          />
         </Link>
       </div>
       <div className="details">
-        <Link to="/item/" className="name">
+        <Link to={`/detail/${itemInfo.product_id}`} className="name">
           {itemInfo.name}
         </Link>
         <div className="priceQuantity">
